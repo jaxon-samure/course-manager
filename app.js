@@ -1,22 +1,32 @@
-const express = require('express')
-const app = express()
-const mongoose = require('mongoose')
 require('dotenv').config()
-const postModel = require('./models/post-model')
 
+const express = require('express')
+const mongoose = require('mongoose')
+const fileUpload = require('express-fileupload')
+
+const app = express()
+
+app.use(express.json())
+app.use(express.static('static'))
+app.use(fileUpload({}))
+
+// Routes
+app.use('/api/post', require('./routers/post-route'))
 
 const PORT = process.env.PORT || 8000
-const db_url = process.env.DB_URL
 
-const connect_db = async () => {
-    try{
-        await mongoose.connect(db_url);
-        console.log("Connected to db");
-        app.listen(PORT, () => console.log(`Server run in ${PORT}`));
-    } catch(error) {
-        console.log(`error to connnect db: ${error}`);
-    }
+const bootstrap = async () => {
+	try {
+		await mongoose
+			.connect(process.env.DB_URL)
+			.then(() => console.log('Connected DB'))
+
+		app.listen(PORT, () =>
+			console.log(`Listening on - http://localhost:${PORT}`)
+		)
+	} catch (error) {
+		console.log(`Error connecting with DB: ${error}`)
+	}
 }
 
-
-connect_db();
+bootstrap()
