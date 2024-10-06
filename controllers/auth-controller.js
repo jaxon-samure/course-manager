@@ -3,9 +3,9 @@ const authService = require('../service/auth-service')
 class AuthController{
     async register(req, res, next){
         try {
-            console.log(req.body)
             const {email, password} = req.body
             const data = await authService.register(email, password)
+            res.cookie('refreshToken', data.refreshToken, {httpOnly:true, maxAge:30*24*60*60*1000})
             return res.json(data)
 
         } catch (error) {
@@ -26,4 +26,3 @@ class AuthController{
 };
 
 module.exports = new AuthController()
-

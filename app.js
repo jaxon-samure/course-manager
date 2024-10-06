@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const fileUpload = require('express-fileupload')
 const requestTime = require('./middlewares/request-time')
+const cookieParser = require('cookie-parser')
 
 
 const app = express()
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(express.static('static'))
 app.use(fileUpload({}))
 app.use(requestTime)
+app.use(cookieParser({}))
 
 // Routes
 
