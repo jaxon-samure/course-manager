@@ -21,6 +21,13 @@ class TokenService {
         const token = await tokenModel.create({user:user_id, refreshToken})
         return token
     }
+
+
+    async removeToken(refreshToken){
+        const refreshTokenValue = refreshToken;
+        const result = await tokenModel.deleteOne({ refreshToken: refreshTokenValue });
+
+    }
 }
 
 module.exports = TokenService;

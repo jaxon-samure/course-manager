@@ -37,6 +37,36 @@ class AuthService {
         user.isActivated = true;
         await user.save()
     } 
+
+    async login(email, password){
+        const user = await userModel.findOne({email:email})
+        if (!user) {
+            throw new Error('User nor defind')
+        }
+
+        const isPassword = await bcrypt.compare(password, user.password)
+        if(!isPassword){
+            throw Error('Password is incorrect')
+        }
+        const userDto = new UserDto(user)
+        const tokens = tokenService.generateToken({...userDto })
+        await tokenService.savedToken(userDto.id, tokens.refreshToken)
+
+        return { user: userDto, ...tokens}
+    }
+
+    async logout(refreshToken){
+    
+        const token = await tokenService.removeToken(refreshToken)
+    }
+
+    async refresh(refreshToken){
+        if(!refreshToken){
+            throw new Error("Bad authorization")
+        }
+
+        
+    }
 };
 
 module.exports = new AuthService()
