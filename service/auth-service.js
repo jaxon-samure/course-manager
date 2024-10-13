@@ -65,7 +65,22 @@ class AuthService {
             throw new Error("Bad authorization")
         }
 
+        const userPayload = tokenService.validateRefreshToken(refreshToken)
+        const tokenDB = await tokenService.findToken(refreshToken)
         
+
+        if (!tokenDB || !userPayload){
+            throw new Error('Bad authorization')
+        }
+
+        const user = await userModel.findById(userPayload.id)
+        
+        const userdto = new UserDto(user)
+        const tokens = tokenService.generateToken({...userdto })
+        await tokenService.savedToken(userdto.id, tokens.refreshToken)
+
+        return { user: userdto, ...tokens}
+
     }
 };
 

@@ -17,7 +17,7 @@ class AuthController{
         try {
             const {id} = req.params
             await authService.activation(id)
-            return res.redirect("https://sammi.ac")
+            return res.redirect(process.env.CLIENT_URL)
             
         } catch (error) {
             console.log(error)
@@ -52,7 +52,10 @@ class AuthController{
     async refresh(req, res, next){
         try {
             const { refreshToken } = req.cookies
+            console.log(refreshToken)
             const data = await authService.refresh(refreshToken)
+            res.cookie('refreshToken', data.refreshToken, {httpOnly:true, maxAge:30*24*60*60*1000})
+            return res.json(data)
             
         } catch (error) {
             console.log(error);

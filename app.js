@@ -22,7 +22,7 @@ app.use(cookieParser({}))
 app.use('/api/post', require('./routers/post-route'));
 app.use('/api/auth', require('./routers/auth-route'));
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 3000
 
 const dbURL = 'mongodb://127.0.0.1:27017/test';  
 
